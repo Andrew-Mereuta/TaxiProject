@@ -1,0 +1,689 @@
+openapi: 3.0.0
+info:
+  version: 0.0.1
+  title: practiceProject
+  description: This is a project just to practice constructing API
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/Andrew-Mereuta/practiceProject/0.0.1
+
+
+paths:
+  /clients/allClients:
+    get:
+      tags:
+        - clients
+      summary: getAllClients
+      operationId: getAllClients
+      responses:
+        '200' :
+          description: all clients are returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Client'
+      security:
+        - bearerAuth: []
+  '/clients/{clientId}':
+    get:
+      tags:
+        - clients
+      summary: get client with clienId
+      operationId: getClientWithId
+      parameters:
+        - name: clientId
+          in: path
+          description: ID of client to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200' :
+          description: client with clientId retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '400' :
+          description: Invalid clientId
+        '404':
+          description: clientId not found
+      security:
+        - bearerAuth: []
+    delete:
+      tags:
+        - clients
+      summary: delete specific client from the system
+      operationId: deleteClient
+      parameters:
+        - name: clientId
+          in: path
+          description: id of the client
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '404' :
+          description: client not found
+        '200' :
+          description: client is deleted
+        '400' :
+          description: input is not valid
+      security:
+        - bearerAuth: []
+    put:
+      tags:
+        - clients
+      summary: update specific client
+      operationId: updateClient
+      parameters:
+        - name: clientId
+          in: path
+          description: id of the client
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '404' :
+          description: client not found
+        '200' :
+          description: client is updated
+        '400' :
+          description: input is not valid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+      security:
+        - bearerAuth: []
+  /clients/register:
+    post:
+      tags:
+        - clients
+      summary: register new client
+      operationId: registerClient
+      responses:
+        '405' :
+          description: Invalid input
+        '201' :
+          description: client registered successfully
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+        description: Created user object
+        required: true
+  /clients/login:
+    post:
+      tags:
+        - clients
+      summary: clients attempts to login
+      operationId: login
+      responses:
+        '405' :
+          description: Invalid input
+        '200' :
+          description: authorized client
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                  format: password
+        description: attempt to login a user
+        required: true
+  /clients/logout:
+    post:
+      tags:
+        - clients
+      summary: client logs out
+      operationId: logout
+      responses:
+        '200' :
+          description: successful logout
+      security:
+        - bearerAuth: []
+  /orders/addOrder:
+    post:
+      tags:
+        - orders
+      summary: creates a new order
+      operationId: createOrder
+      parameters:
+        - name: clientId
+          in: query
+          description: ID of client which orders
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: driverId
+          in: query
+          description: ID of drivers who will take the order
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '201' :
+          description: Order created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        '404' :
+          description: Driver or Client was not found
+      security:
+        - bearerAuth: []
+  /orders/allOrders:
+    get:
+      tags:
+        - orders
+      summary: gets all orders of
+      operationId: getAllOrders
+      responses:
+        '200' :
+          description: returns all orders
+          content:
+            appliaction/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Order"
+      security:
+        - bearerAuth: []
+  /orders/client/allOrders:
+    get:
+      tags:
+        - orders
+      summary: gets all orders of a client
+      operationId: getOrdersOfClient
+      parameters:
+        - name: clientId
+          in: query
+          description: ID of client whose orders we are interested in
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200' :
+          description: returns all orders
+          content:
+            appliaction/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Order"
+        '404' :
+          description: id of the client does not exist
+        '400' :
+          description: entered id is not valid (not number)
+      security:
+        - bearerAuth: []
+  /orders/driver/allOrders:
+    get:
+      tags:
+        - orders
+      summary: gets all orders of a driver
+      operationId: getOrdersOfDriver
+      parameters:
+        - name: driverId
+          in: query
+          description: ID of driver whose orders we are interested in
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200' :
+          description: returns all orders
+          content:
+            appliaction/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Order"
+        '404' :
+          description: id of the driver does not exist
+        '400' :
+          description: entered id is not valid (not number)
+      security:
+        - bearerAuth: []
+  '/orders/{orderId}':
+    get:
+      tags:
+        - orders
+      summary: find specific order by id
+      operationId: getOrder
+      parameters:
+        - name: orderId
+          in: path
+          description: id of the order
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200' :
+          description: Requested order is returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        '404' :
+          description: Order was not found
+      security:
+        - bearerAuth: []
+    delete:
+      tags:
+        - orders
+      summary: delete specific order by id
+      operationId: deleteOrder
+      parameters:
+        - name: orderId
+          in: path
+          description: id of the order
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200' :
+          description: order sis deleted
+        '404' :
+          description: order was not found
+      security:
+        - bearerAuth: []
+    patch:
+      tags:
+        - orders
+      summary: client changes driver
+      operationId: changeDriver
+      parameters:
+        - name: orderId
+          in: path
+          description: id of the order
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: driverId
+          in: query
+          description: new id of the driver
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200' :
+          description: driver was changed on new driver
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        '404' :
+          description: order or driver was not found
+        '400' :
+          description: either order or driver id was indicated incorrectly
+      security:
+        - bearerAuth: []
+    put:
+      tags:
+        - orders
+      summary: update specific order
+      operationId: updateOrder
+      parameters:
+        - name: orderId
+          in: path
+          description: id of the order
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200' :
+          description: order is updated
+        '404' :
+          description: order is not found
+        '400' :
+          description: invalid input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+      security:
+        - bearerAuth: []
+  "/drivers/addDriver":
+    post:
+      tags:
+        - drivers
+      summary: company hires new driver
+      operationId: hireNewDriver
+      responses:
+        '400' :
+          description: Invalid input
+        '201' :
+          description: driver hired successfully
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                driver:
+                  $ref: '#/components/schemas/Driver'
+                car:
+                  $ref: '#/components/schemas/Car'
+        description: Created driver object with his car
+        required: true
+      security:
+        - bearerAuth: []
+  '/drivers/{driverId}':
+    delete:
+      tags:
+        - drivers
+      summary: deletes driver with his car
+      operationId: deleteDriverById
+      parameters:
+        - name: driverId
+          in: path
+          description: id of the driver
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '404':
+          description: driver not found
+        '200':
+          description: driver deleted successfully
+        '400':
+          description: invalid input
+      security:
+        - bearerAuth: []
+    get:
+      tags:
+        - drivers
+      summary: get specific driver
+      operationId: getDriverById
+      parameters:
+        - name: driverId
+          in: path
+          description: id of the driver
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '404' :
+          description: driver not found
+        '200' :
+          description: driver is returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+      security:
+        - bearerAuth: []
+  /drivers/allDrivers:
+    get:
+      tags:
+        - drivers
+      summary: get all drivers
+      operationId: getAllDrivers
+      parameters:
+        - name: isBusy
+          in: query
+          description: is the driver busy or not (filter)
+          required: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200' :
+          description: all drivers are returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Driver'
+      security:
+        - bearerAuth: []
+  '/drivers/changeCar/{driverId}':
+    put:
+      tags:
+        - drivers
+      summary: change driver's car
+      operationId: changeDriversCar
+      parameters:
+        - name: driverId
+          in: path
+          description: id of the driver
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '404' :
+          description: driver not found
+        '200' :
+          description: car is changed
+        '400' :
+          description: invalid input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Car'
+        description: new car
+        required: true
+      security:
+        - bearerAuth: []
+  '/cars/changeModel/{carId}':
+    patch:
+      tags:
+        - cars
+      summary: change car's model
+      operationId: changeModel
+      parameters:
+        - name: carId
+          in: path
+          description: id of the car
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '404' :
+          description: car is not found
+        '200' :
+          description: model of the car is changed
+        '400' :
+          description: invalid input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+              properties:
+                model:
+                  type: string
+      security:
+        - bearerAuth: []
+  /cars/allCars:
+    get:
+      tags:
+        - cars
+      summary: get all cars
+      operationId: getAllCars
+      parameters:
+        - name: model
+          in: query
+          description: model of the car
+          required: false
+          schema:
+            type: string
+      responses:
+        '200' :
+          description: all cars are returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Car'
+      security:
+        - bearerAuth: []
+  '/cars/{carId}':
+    get:
+      tags:
+        - cars
+      summary: get specific car
+      operationId: getTheCar
+      parameters:
+        - name: carId
+          in: path
+          description: id of the car
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '404' :
+          description: car not found
+        '200' :
+          description: car is returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Car'
+        '400' :
+          description: invalid input
+      security:
+        - bearerAuth: []
+    put:
+      tags:
+        - cars
+      summary: update specific car
+      operationId: updateTheCar
+      parameters:
+        - name: carId
+          in: path
+          description: id of the car
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '404' :
+          description: car not found
+        '200' :
+          description: car is updated
+        '400' :
+          description: invalid input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Car'
+      security:
+        - bearerAuth: []
+    delete:
+      tags:
+        - cars
+      summary: delete specific car
+      operationId: deleteTheCar
+      parameters:
+        - name: carId
+          in: path
+          description: id of the car
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '404' :
+          description: car not found
+        '200' :
+          description: car is deleted
+        '400' :
+          description: invalid input
+      security:
+        - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Client:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+          format: password
+    Car:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        model:
+          type: string
+        driverId:
+          type: integer
+          format: int64
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        customerId:
+          type: integer
+          format: int64
+        # carId:
+        #   type: integer
+        #   format: int64
+        driverId:
+          type: integer
+          format: int64
+        price:
+          type: number
+          format: float
+    Driver:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        password:
+          type: string
+          format: password
+        isBusy:
+          type: boolean
