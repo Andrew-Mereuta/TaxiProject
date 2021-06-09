@@ -2,8 +2,8 @@ package taxi.project.demo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import taxi.project.demo.entities.Student;
-import taxi.project.demo.repositories.StudentRepository;
+import taxi.project.demo.entities.Client;
+import taxi.project.demo.repositories.ClientRepository;
 
 import java.util.List;
 
@@ -11,21 +11,21 @@ import java.util.List;
 @RequestMapping("/api/")
 public class SimpleController {
 
-    private StudentRepository studentRepository;
+    private ClientRepository clientRepository;
 
     @Autowired
-    public SimpleController(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
+    public SimpleController(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
     }
 
     @PostMapping
-    public void createStudent(@RequestBody Student student) {
-        studentRepository.save(student);
+    public void createStudent(@RequestBody Client client) {
+        clientRepository.save(client);
     }
 
-    @GetMapping("/allStudents")
-    public List<Student> allStudents() {
-        List<Student> students = studentRepository.findAll();
-        return students;
+    @GetMapping("/allClients")
+    public List<Client> allStudents() {
+        List<Client> clients = clientRepository.findAll();
+        return clients;
     }
 }

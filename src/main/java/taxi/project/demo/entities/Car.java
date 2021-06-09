@@ -8,15 +8,19 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name="student")
-@NoArgsConstructor
-@AllArgsConstructor
+@Table(name = "car")
 @Getter
 @Setter
-public class Student {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Car {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String model;
+
+    @OneToOne
+    @JoinColumn(name = "driver_id")
+    private Driver driver;
 }
