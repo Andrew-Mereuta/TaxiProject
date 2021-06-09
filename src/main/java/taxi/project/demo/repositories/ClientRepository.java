@@ -6,4 +6,6 @@ import taxi.project.demo.entities.Client;
 
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
+
+    Client findByEmail(String email);
 }
