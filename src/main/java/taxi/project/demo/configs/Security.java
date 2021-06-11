@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import taxi.project.demo.filters.JWTFilter;
 import taxi.project.demo.filters.JWTPublisher;
 import taxi.project.demo.repositories.ClientRepository;
 import taxi.project.demo.services.ClientService;
@@ -39,6 +40,7 @@ public class Security extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilter(new JWTPublisher(authenticationManager()))
+                .addFilterAfter(new JWTFilter(), JWTPublisher.class)
                 .authorizeRequests()
                 .antMatchers("/login", "/api/v1/register").permitAll()
                 .anyRequest().authenticated();

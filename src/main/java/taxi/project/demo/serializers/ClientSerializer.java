@@ -22,6 +22,7 @@ public class ClientSerializer extends StdSerializer<Client> {
         jgen.writeStartObject();
         jgen.writeStringField("name", client.getName());
         jgen.writeStringField("email", client.getEmail());
+        jgen.writeStringField("role", client.getRole().toString());
         jgen.writeEndObject();
     }
 }

@@ -29,8 +29,11 @@ public class CreatJWT {
         SecretKey secretKey = Keys.hmacShaKeyFor(jwtInfo.getSecretKey().getBytes());
 
         String jws = Jwts.builder()
-                            .setHeader(Map.of("alg", "HmacSHA256"))
-                            .setPayload(payload)
+//                            .setHeaderParam("alg", "HS256")
+                            .claim("name", client.getName())
+                            .claim("email", client.getEmail())
+                            .claim("role", client.getRole())
+                            //.setPayload(payload)
                             .signWith(secretKey)
                             .compact();
         return "Bearer " + jws;

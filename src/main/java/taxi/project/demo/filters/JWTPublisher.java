@@ -1,6 +1,7 @@
 package taxi.project.demo.filters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -47,6 +48,6 @@ public class JWTPublisher extends UsernamePasswordAuthenticationFilter {
         Client client = (Client) authResult.getPrincipal();
         String token = tokenConstruct.createJWT(client);
 
-        response.setHeader("Authorization", token);
+        response.setHeader(HttpHeaders.AUTHORIZATION, token);
     }
 }
