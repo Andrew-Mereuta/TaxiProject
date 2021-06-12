@@ -42,7 +42,7 @@ public class Security extends WebSecurityConfigurerAdapter {
                 .addFilter(new JWTPublisher(authenticationManager()))
                 .addFilterAfter(new JWTFilter(), JWTPublisher.class)
                 .authorizeRequests()
-                .antMatchers("/login", "/api/v1/register").permitAll()
+                .antMatchers("/clients/login", "/clients/register", "/login").permitAll()
                 .anyRequest().authenticated();
 
     }

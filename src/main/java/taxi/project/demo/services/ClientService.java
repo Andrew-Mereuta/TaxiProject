@@ -10,6 +10,9 @@ import taxi.project.demo.entities.Client;
 import taxi.project.demo.enums.Role;
 import taxi.project.demo.repositories.ClientRepository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class ClientService implements UserDetailsService {
 
@@ -42,5 +45,29 @@ public class ClientService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Client client = clientRepository.findByEmail(email);
         return client;
+    }
+
+    public List<Client> findAllClients() {
+        return clientRepository.findAll();
+    }
+
+
+    public Client findClientById(Long clientId) {
+        Optional<Client> clientById = clientRepository.findById(clientId);
+        return clientById.orElse(null);
+    }
+
+    public boolean deleteClient(Long clientId, Client requestMadeClient) {
+        if(requestMadeClient.getId().equals(clientId) || requestMadeClient.getRole().equals(Role.ADMIN)) {
+            if (clientRepository.findById(clientId).isPresent()) {
+                clientRepository.deleteById(clientId);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void updateClient(Long clientId, Client client) {
+        //TODO
     }
 }

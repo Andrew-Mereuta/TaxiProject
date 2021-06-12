@@ -1,16 +1,15 @@
 openapi: 3.0.0
 info:
-  version: 0.0.1
-  title: practiceProject
-  description: This is a project just to practice constructing API
+  version: 0.0.2
+  title: TaxiProjectUpdated
+  description: project about taxi management
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/Andrew-Mereuta/practiceProject/0.0.1
-
+    url: https://virtserver.swaggerhub.com/Andrew-Mereuta/TaxiProjectUpdated/0.0.2
 
 paths:
-  /clients/allClients:
+  /clients:
     get:
       tags:
         - clients
@@ -155,7 +154,7 @@ paths:
           description: successful logout
       security:
         - bearerAuth: []
-  /orders/addOrder:
+  /orders:
     post:
       tags:
         - orders
@@ -187,7 +186,6 @@ paths:
           description: Driver or Client was not found
       security:
         - bearerAuth: []
-  /orders/allOrders:
     get:
       tags:
         - orders
@@ -367,7 +365,7 @@ paths:
               $ref: '#/components/schemas/Order'
       security:
         - bearerAuth: []
-  "/drivers/addDriver":
+  /drivers:
     post:
       tags:
         - drivers
@@ -390,6 +388,30 @@ paths:
                   $ref: '#/components/schemas/Car'
         description: Created driver object with his car
         required: true
+      security:
+        - bearerAuth: []
+    get:
+      tags:
+        - drivers
+      summary: get all drivers
+      operationId: getAllDrivers
+      parameters:
+        - name: isBusy
+          in: query
+          description: is the driver busy or not (filter)
+          required: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200' :
+          description: all drivers are returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Driver'
       security:
         - bearerAuth: []
   '/drivers/{driverId}':
@@ -439,32 +461,7 @@ paths:
                 $ref: '#/components/schemas/Driver'
       security:
         - bearerAuth: []
-  /drivers/allDrivers:
-    get:
-      tags:
-        - drivers
-      summary: get all drivers
-      operationId: getAllDrivers
-      parameters:
-        - name: isBusy
-          in: query
-          description: is the driver busy or not (filter)
-          required: false
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200' :
-          description: all drivers are returned
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Driver'
-      security:
-        - bearerAuth: []
-  '/drivers/changeCar/{driverId}':
+    # '/drivers/changeCar/{driverId}':
     put:
       tags:
         - drivers
@@ -494,38 +491,7 @@ paths:
         required: true
       security:
         - bearerAuth: []
-  '/cars/changeModel/{carId}':
-    patch:
-      tags:
-        - cars
-      summary: change car's model
-      operationId: changeModel
-      parameters:
-        - name: carId
-          in: path
-          description: id of the car
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '404' :
-          description: car is not found
-        '200' :
-          description: model of the car is changed
-        '400' :
-          description: invalid input
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: string
-              properties:
-                model:
-                  type: string
-      security:
-        - bearerAuth: []
-  /cars/allCars:
+  /cars:
     get:
       tags:
         - cars
@@ -625,6 +591,37 @@ paths:
           description: invalid input
       security:
         - bearerAuth: []
+    # '/cars/changeModel/{carId}':
+    patch:
+      tags:
+        - cars
+      summary: change car's model
+      operationId: changeModel
+      parameters:
+        - name: carId
+          in: path
+          description: id of the car
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '404' :
+          description: car is not found
+        '200' :
+          description: model of the car is changed
+        '400' :
+          description: invalid input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+              properties:
+                model:
+                  type: string
+      security:
+        - bearerAuth: []
 components:
   securitySchemes:
     bearerAuth:
@@ -635,9 +632,6 @@ components:
     Client:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
         username:
           type: string
         email:
@@ -648,9 +642,6 @@ components:
     Car:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
         model:
           type: string
         driverId:
@@ -659,15 +650,9 @@ components:
     Order:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
         customerId:
           type: integer
           format: int64
-        # carId:
-        #   type: integer
-        #   format: int64
         driverId:
           type: integer
           format: int64
@@ -677,9 +662,6 @@ components:
     Driver:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
         name:
           type: string
         password:

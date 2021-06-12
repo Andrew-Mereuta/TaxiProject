@@ -17,23 +17,13 @@ public class CreatJWT {
 
     private JWTInfo jwtInfo = new JWTInfo();
 
-    public String createJWT(Client client) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-        module.addSerializer(Client.class, new ClientSerializer());
-        mapper.registerModule(module);
-        String payload = mapper.writeValueAsString(client);
-
-        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-
+    public String createJWT(Client client) {
         SecretKey secretKey = Keys.hmacShaKeyFor(jwtInfo.getSecretKey().getBytes());
 
         String jws = Jwts.builder()
-//                            .setHeaderParam("alg", "HS256")
                             .claim("name", client.getName())
                             .claim("email", client.getEmail())
                             .claim("role", client.getRole())
-                            //.setPayload(payload)
                             .signWith(secretKey)
                             .compact();
         return "Bearer " + jws;

@@ -11,7 +11,7 @@ import taxi.project.demo.entities.Client;
 import taxi.project.demo.services.ClientService;
 
 @RestController
-@RequestMapping("/api/v1/register")
+@RequestMapping("/clients/register")
 public class RegisterController {
 
     private ClientService clientService;
