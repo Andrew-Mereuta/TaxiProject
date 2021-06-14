@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import taxi.project.demo.filters.JWTFilter;
 import taxi.project.demo.filters.JWTPublisher;
 import taxi.project.demo.repositories.ClientRepository;
+import taxi.project.demo.services.ClientDriverUserService;
 import taxi.project.demo.services.ClientService;
 
 @Configuration
@@ -20,16 +21,16 @@ import taxi.project.demo.services.ClientService;
 public class Security extends WebSecurityConfigurerAdapter {
 
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final ClientService clientService;
+    private final ClientDriverUserService clientDriverUserService;
     private final ClientRepository clientRepository;
 
 
     @Autowired
     public Security(BCryptPasswordEncoder bCryptPasswordEncoder,
-                    ClientService clientService,
+                    ClientDriverUserService clientDriverUserService,
                     ClientRepository clientRepository) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.clientService = clientService;
+        this.clientDriverUserService = clientDriverUserService;
         this.clientRepository = clientRepository;
     }
 
@@ -58,7 +59,7 @@ public class Security extends WebSecurityConfigurerAdapter {
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(bCryptPasswordEncoder);
-        provider.setUserDetailsService(userDetailsService());
+        provider.setUserDetailsService(clientDriverUserService);
         return provider;
     }
 
