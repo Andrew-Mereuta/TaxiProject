@@ -43,6 +43,7 @@ public class Security extends WebSecurityConfigurerAdapter {
                 .addFilterAfter(new JWTFilter(), JWTPublisher.class)
                 .authorizeRequests()
                 .antMatchers("/clients/login", "/clients/register", "/login").permitAll()
+                .antMatchers("/drivers/**").permitAll() // temporary, only for debugging
                 .anyRequest().authenticated();
 
     }
@@ -57,7 +58,7 @@ public class Security extends WebSecurityConfigurerAdapter {
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(bCryptPasswordEncoder);
-        provider.setUserDetailsService(clientService);
+        provider.setUserDetailsService(userDetailsService());
         return provider;
     }
 
