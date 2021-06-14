@@ -6,12 +6,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import taxi.project.demo.entities.Car;
 import taxi.project.demo.entities.Driver;
 import taxi.project.demo.services.DriverService;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -27,7 +29,10 @@ public class DriverController {
         this.driverService = driverService;
     }
 
+
+    // Admin system to create a driver, but driver can be created from register controller as normal user
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> createDriver(@RequestBody String payload) throws JsonProcessingException {
         JsonNode node = mapper.readTree(payload);
         JsonNode driver = node.get("driver");
@@ -40,8 +45,103 @@ public class DriverController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> getAllDrivers() throws JsonProcessingException {
         List<Driver> drivers = new ArrayList<>(driverService.getAllDrivers());
         return new ResponseEntity<>(drivers, HttpStatus.OK);
     }
+
+    @GetMapping("{driverId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DRIVER')")
+    public ResponseEntity<Object> getDriverById(@PathVariable("driverId") Long driverId,
+                                                @RequestHeader("Authorization") String authorization) throws JsonProcessingException {
+        Driver driver = driverService.findDriverById(driverId);
+        if(driver == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        authorization = authorization.replace("Bearer ", "");
+        String[] parts = authorization.split("\\.");
+
+        byte[] decodedBytes = Base64.getDecoder().decode(parts[1]);
+        String decodedString = new String(decodedBytes);
+        JsonNode node = mapper.readTree(decodedString);
+        String email = node.get("email").asText();
+        String role = node.get("role").asText();
+
+        if(role.equalsIgnoreCase("admin")) {
+            return new ResponseEntity<>(driver, HttpStatus.OK);
+        }
+
+        Driver dr = (Driver) driverService.loadUserByUsername(email);
+        if(dr == null || !dr.getId().equals(driverId)) {
+            return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+        }
+        return new ResponseEntity<>(driver, HttpStatus.OK);
+    }
+
+    @DeleteMapping("{driverId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DRIVER')")
+    public ResponseEntity<Object> deleteDriverById(@PathVariable("driverId") Long driverId,
+                                                   @RequestHeader("Authorization") String authorization) throws JsonProcessingException {
+        Driver driver = driverService.findDriverById(driverId);
+        if(driver == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        authorization = authorization.replace("Bearer ", "");
+        String[] parts = authorization.split("\\.");
+
+        byte[] decodedBytes = Base64.getDecoder().decode(parts[1]);
+        String decodedString = new String(decodedBytes);
+        JsonNode node = mapper.readTree(decodedString);
+        String email = node.get("email").asText();
+        String role = node.get("role").asText();
+
+        if(role.equalsIgnoreCase("admin")) {
+            driverService.deleteDriverById(driverId);
+            return new ResponseEntity<>(driver, HttpStatus.OK);
+        }
+
+        Driver dr = (Driver) driverService.loadUserByUsername(email);
+        if(dr == null || !dr.getId().equals(driverId)) {
+            return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+        }
+        driverService.deleteDriverById(driverId);
+        return new ResponseEntity<>(driver, HttpStatus.OK);
+    }
+
+    @PutMapping("{driverId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DRIVER')")
+    public ResponseEntity<Object> updateDriver(@PathVariable("driverId") Long driverId,
+                                                   @RequestHeader("Authorization") String authorization,
+                                                   @RequestBody Driver driver) throws JsonProcessingException {
+        Driver currentDriver = driverService.findDriverById(driverId);
+        if(currentDriver == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        authorization = authorization.replace("Bearer ", "");
+        String[] parts = authorization.split("\\.");
+
+        byte[] decodedBytes = Base64.getDecoder().decode(parts[1]);
+        String decodedString = new String(decodedBytes);
+        JsonNode node = mapper.readTree(decodedString);
+        String email = node.get("email").asText();
+        String role = node.get("role").asText();
+
+        if(role.equalsIgnoreCase("admin")) {
+            driverService.updateDriver(driver, currentDriver);
+            return new ResponseEntity<>(driver, HttpStatus.OK);
+        }
+
+        Driver dr = (Driver) driverService.loadUserByUsername(email);
+        if(dr == null || !dr.getId().equals(driverId)) {
+            return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+        }
+        driverService.updateDriver(driver, currentDriver);
+        return new ResponseEntity<>(driver, HttpStatus.OK);
+    }
+
+
 }

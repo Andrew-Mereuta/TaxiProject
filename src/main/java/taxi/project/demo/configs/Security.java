@@ -49,7 +49,7 @@ public class Security extends WebSecurityConfigurerAdapter {
                 .addFilterAfter(new JWTFilter(), JWTPublisher.class)
                 .authorizeRequests()
                 .antMatchers("/clients/login", "/register", "/login").permitAll()
-                .antMatchers("/drivers/**").permitAll() // temporary, only for debugging
+                //.antMatchers("/drivers/**").permitAll() // temporary, only for debugging
                 .anyRequest().authenticated();
 
     }

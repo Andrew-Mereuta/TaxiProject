@@ -55,4 +55,16 @@ public class DriverService implements UserDetailsService {
     public List<Driver> getAllDrivers() {
         return driverRepository.findAll();
     }
+
+    public void deleteDriverById(Long driverId) {
+        driverRepository.deleteById(driverId);
+    }
+
+
+    public void updateDriver(Driver driver, Driver currentDriver) {
+        driverRepository.updateDriver(driver.getEmail(), driver.getName(), bCryptPasswordEncoder.encode(driver.getPassword()), currentDriver.getId());
+        currentDriver.setEmail(driver.getEmail());
+        currentDriver.setPassword(bCryptPasswordEncoder.encode(driver.getPassword()));
+        currentDriver.setName(driver.getName());
+    }
 }
