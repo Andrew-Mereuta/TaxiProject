@@ -60,22 +60,14 @@ public class ClientController {
     }
 
     @PutMapping("{clientId}")
-    @PreAuthorize("hasRole('ROLE_CLIENT')")
+    @PreAuthorize("hasAnyRole('ROLE_CLIENT', 'ROLE_ADMIN')")
     public ResponseEntity<Object> updateClient(@PathVariable("clientId") Long clientId, @RequestBody Client client) {
         //TODO
-        Client c = (Client) clientService.loadUserByUsername(client.getEmail());
-        if(c.getId().equals(clientId)) {
-            clientService.updateClient(clientId, client);
+        Client c = clientService.findClientById(clientId);
+        if(c != null) {
+            clientService.updateClient(client, c);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
-
-
-
-
-
-
-
-
 }

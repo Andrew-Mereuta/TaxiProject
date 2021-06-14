@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import taxi.project.demo.entities.Client;
+import taxi.project.demo.entities.Driver;
 import taxi.project.demo.serializers.ClientSerializer;
 
 import javax.crypto.SecretKey;
@@ -26,6 +27,20 @@ public class CreatJWT {
                             .claim("role", client.getRole())
                             .signWith(secretKey)
                             .compact();
+        return "Bearer " + jws;
+    }
+
+    public String createJWT(Driver driver) {
+        SecretKey secretKey = Keys.hmacShaKeyFor(jwtInfo.getSecretKey().getBytes());
+
+        String jws = Jwts.builder()
+                .claim("name", driver.getName())
+                .claim("email", driver.getEmail())
+                .claim("role", driver.getRole())
+                .claim("isBusy", driver.isBusy())
+                .claim("carModel", driver.getCar().getModel())
+                .signWith(secretKey)
+                .compact();
         return "Bearer " + jws;
     }
 }

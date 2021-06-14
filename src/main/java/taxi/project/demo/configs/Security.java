@@ -15,23 +15,28 @@ import taxi.project.demo.filters.JWTPublisher;
 import taxi.project.demo.repositories.ClientRepository;
 import taxi.project.demo.services.ClientDriverUserService;
 import taxi.project.demo.services.ClientService;
+import taxi.project.demo.services.DriverService;
 
 @Configuration
 @EnableWebSecurity
 public class Security extends WebSecurityConfigurerAdapter {
 
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final ClientDriverUserService clientDriverUserService;
+    private final ClientService clientService;
     private final ClientRepository clientRepository;
+    private final DriverService driverService;
+    private final ClientDriverUserService clientDriverUserService;
 
 
     @Autowired
     public Security(BCryptPasswordEncoder bCryptPasswordEncoder,
-                    ClientDriverUserService clientDriverUserService,
-                    ClientRepository clientRepository) {
+                    ClientService clientService,
+                    ClientRepository clientRepository, DriverService driverService, ClientDriverUserService clientDriverUserService) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.clientDriverUserService = clientDriverUserService;
+        this.clientService = clientService;
         this.clientRepository = clientRepository;
+        this.driverService = driverService;
+        this.clientDriverUserService = clientDriverUserService;
     }
 
     @Override
@@ -40,10 +45,10 @@ public class Security extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilter(new JWTPublisher(authenticationManager()))
+                .addFilter(new JWTPublisher(authenticationManager(), clientService, driverService))
                 .addFilterAfter(new JWTFilter(), JWTPublisher.class)
                 .authorizeRequests()
-                .antMatchers("/clients/login", "/clients/register", "/login").permitAll()
+                .antMatchers("/clients/login", "/register", "/login").permitAll()
                 .antMatchers("/drivers/**").permitAll() // temporary, only for debugging
                 .anyRequest().authenticated();
 
