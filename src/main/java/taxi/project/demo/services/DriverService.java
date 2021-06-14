@@ -11,6 +11,8 @@ import taxi.project.demo.entities.Driver;
 import taxi.project.demo.enums.Role;
 import taxi.project.demo.repositories.DriverRepository;
 
+import java.util.List;
+
 @Service
 public class DriverService implements UserDetailsService {
 
@@ -41,8 +43,16 @@ public class DriverService implements UserDetailsService {
         return 201;
     }
 
+    public Driver findDriverById(Long driverId) {
+        return driverRepository.findById(driverId).orElse(null);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return driverRepository.findByEmail(email);
+    }
+
+    public List<Driver> getAllDrivers() {
+        return driverRepository.findAll();
     }
 }

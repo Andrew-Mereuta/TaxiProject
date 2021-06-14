@@ -1,9 +1,11 @@
 package taxi.project.demo.entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import taxi.project.demo.serializers.OrderSerializer;
 
 import javax.persistence.*;
 
@@ -13,6 +15,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonSerialize(using = OrderSerializer.class)
 public class Order {
 
     @Id

@@ -2,6 +2,7 @@ package taxi.project.demo.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import taxi.project.demo.enums.Role;
+import taxi.project.demo.serializers.DriverSerializer;
+import taxi.project.demo.serializers.OrderSerializer;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -23,6 +26,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonSerialize(using = DriverSerializer.class)
 public class Driver implements UserDetails {
 
     @Id

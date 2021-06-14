@@ -11,6 +11,9 @@ import taxi.project.demo.entities.Car;
 import taxi.project.demo.entities.Driver;
 import taxi.project.demo.services.DriverService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/drivers")
 public class DriverController {
@@ -34,5 +37,11 @@ public class DriverController {
         Car car1 = mapper.readValue(car.toPrettyString(), Car.class);
 
         return new ResponseEntity<>(HttpStatus.valueOf(driverService.saveDriver(dr, car1)));
+    }
+
+    @GetMapping
+    public ResponseEntity<Object> getAllDrivers() throws JsonProcessingException {
+        List<Driver> drivers = new ArrayList<>(driverService.getAllDrivers());
+        return new ResponseEntity<>(drivers, HttpStatus.OK);
     }
 }
