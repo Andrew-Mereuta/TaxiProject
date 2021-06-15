@@ -67,11 +67,11 @@ public class ClientService implements UserDetailsService {
         return false;
     }
 
-    public void updateClient(Client client, Client current) {
-        clientRepository.updateClient(client.getEmail(), client.getName(), bCryptPasswordEncoder.encode(client.getPassword()), current.getId());
-        current.setEmail(client.getEmail());
+    public Client updateClient(Client client, Client current) {
+        clientRepository.updateClient(client.getName(), bCryptPasswordEncoder.encode(client.getPassword()), current.getId());
         current.setPassword(bCryptPasswordEncoder.encode(client.getPassword()));
         current.setName(client.getName());
+        return current;
         //TODO
     }
 }

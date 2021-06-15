@@ -10,6 +10,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import taxi.project.demo.entities.Car;
 import taxi.project.demo.entities.Driver;
+import taxi.project.demo.exceptions.MethodNotAllowed;
+import taxi.project.demo.exceptions.ResourceNotFoundException;
 import taxi.project.demo.services.CarService;
 import taxi.project.demo.services.DriverService;
 
@@ -40,7 +42,7 @@ public class CarController {
     public ResponseEntity<Object> getTheCar(@PathVariable("carId") Long carId) {
         Car carById = carService.findCarById(carId);
         if(carById == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Car does not exist");
         }
         return new ResponseEntity<>(carById, HttpStatus.OK);
     }
@@ -51,7 +53,7 @@ public class CarController {
                                               @RequestHeader("Authorization") String authorization) throws JsonProcessingException {
         Car carById = carService.findCarById(carId);
         if(carById == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Car does not exist");
         }
 
         authorization = authorization.replace("Bearer ", "");
@@ -72,7 +74,7 @@ public class CarController {
             carById = carService.changeModel(carById, model);
             return new ResponseEntity<>(carById, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+        throw new MethodNotAllowed("Sorry, this is confidential information");
     }
 
     @PutMapping("{carId}")
@@ -81,7 +83,7 @@ public class CarController {
                                               @RequestHeader("Authorization") String authorization) throws JsonProcessingException {
         Car carById = carService.findCarById(carId);
         if(carById == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Car does not exist");
         }
 
         authorization = authorization.replace("Bearer ", "");
@@ -102,7 +104,7 @@ public class CarController {
             carById = carService.updateCar(carById, car, driver);
             return new ResponseEntity<>(carById, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+        throw new MethodNotAllowed("Sorry, this is confidential information");
     }
 
     @DeleteMapping("{carId}")
@@ -111,7 +113,7 @@ public class CarController {
                                               @RequestHeader("Authorization") String authorization) throws JsonProcessingException {
         Car carById = carService.findCarById(carId);
         if(carById == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Car does not exist");
         }
 
         authorization = authorization.replace("Bearer ", "");
@@ -132,6 +134,6 @@ public class CarController {
             carService.deleteCar(carId);
             return new ResponseEntity<>(HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+        throw new MethodNotAllowed("Sorry, this is confidential information");
     }
 }

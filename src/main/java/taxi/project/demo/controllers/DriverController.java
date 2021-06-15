@@ -10,6 +10,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import taxi.project.demo.entities.Car;
 import taxi.project.demo.entities.Driver;
+import taxi.project.demo.exceptions.MethodNotAllowed;
+import taxi.project.demo.exceptions.ResourceNotFoundException;
 import taxi.project.demo.services.DriverService;
 
 import java.util.ArrayList;
@@ -57,7 +59,7 @@ public class DriverController {
                                                 @RequestHeader("Authorization") String authorization) throws JsonProcessingException {
         Driver driver = driverService.findDriverById(driverId);
         if(driver == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Driver does not exist");
         }
 
         authorization = authorization.replace("Bearer ", "");
@@ -75,7 +77,7 @@ public class DriverController {
 
         Driver dr = (Driver) driverService.loadUserByUsername(email);
         if(dr == null || !dr.getId().equals(driverId)) {
-            return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+            throw new MethodNotAllowed("Sorry, this is confidential information");
         }
         return new ResponseEntity<>(driver, HttpStatus.OK);
     }
@@ -86,7 +88,7 @@ public class DriverController {
                                                    @RequestHeader("Authorization") String authorization) throws JsonProcessingException {
         Driver driver = driverService.findDriverById(driverId);
         if(driver == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Driver does not exist");
         }
 
         authorization = authorization.replace("Bearer ", "");
@@ -105,7 +107,7 @@ public class DriverController {
 
         Driver dr = (Driver) driverService.loadUserByUsername(email);
         if(dr == null || !dr.getId().equals(driverId)) {
-            return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+            throw new MethodNotAllowed("Sorry, this is confidential information");
         }
         driverService.deleteDriverById(driverId);
         return new ResponseEntity<>(driver, HttpStatus.OK);
@@ -118,7 +120,7 @@ public class DriverController {
                                                    @RequestBody Driver driver) throws JsonProcessingException {
         Driver currentDriver = driverService.findDriverById(driverId);
         if(currentDriver == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Driver does not exist");
         }
 
         authorization = authorization.replace("Bearer ", "");
@@ -137,7 +139,7 @@ public class DriverController {
 
         Driver dr = (Driver) driverService.loadUserByUsername(email);
         if(dr == null || !dr.getId().equals(driverId)) {
-            return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+            throw new MethodNotAllowed("Sorry, this is confidential information");
         }
         driverService.updateDriver(driver, currentDriver);
         return new ResponseEntity<>(driver, HttpStatus.OK);

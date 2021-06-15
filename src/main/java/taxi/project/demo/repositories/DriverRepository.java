@@ -15,6 +15,6 @@ public interface DriverRepository extends JpaRepository<Driver, Long> {
 
     @Modifying
     @Transactional
-    @Query("update Driver d set d.email = ?1, d.name = ?2, d.password = ?3 where d.id = ?4")
-    void updateDriver(String email, String name, String password, Long driverId);
+    @Query("update Driver d set d.name = ?1, d.password = ?2 where d.id = ?3")
+    void updateDriver(String name, String password, Long driverId);
 }

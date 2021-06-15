@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import taxi.project.demo.entities.Client;
+import taxi.project.demo.entities.Driver;
+import taxi.project.demo.exceptions.MethodNotAllowed;
+import taxi.project.demo.exceptions.ResourceNotFoundException;
 import taxi.project.demo.services.ClientService;
 
 import java.util.Base64;
@@ -34,8 +37,29 @@ public class ClientController {
 
     @GetMapping("{clientId}")
     @PreAuthorize("hasRole('ROLE_CLIENT')")
-    public Client getClientWithId(@PathVariable("clientId") Long clientId) {
-        return clientService.findClientById(clientId);
+    public ResponseEntity<Object> getClientWithId(@PathVariable("clientId") Long clientId,
+                                  @RequestHeader("Authorization") String authorization) throws JsonProcessingException {
+        Client client = clientService.findClientById(clientId);
+        if(client == null) {
+            throw new ResourceNotFoundException("Client does not exist");
+        }
+        authorization = authorization.replace("Bearer ", "");
+        String[] parts = authorization.split("\\.");
+
+        byte[] decodedBytes = Base64.getDecoder().decode(parts[1]);
+        String decodedString = new String(decodedBytes);
+        JsonNode node = mapper.readTree(decodedString);
+        String email = node.get("email").asText();
+        String role = node.get("role").asText();
+
+        if(role.equalsIgnoreCase("role_admin")) {
+            return new ResponseEntity<>(client, HttpStatus.OK);
+        }
+        Client c = (Client) clientService.loadUserByUsername(email);
+        if(c == null || !c.getId().equals(clientId)) {
+            throw new MethodNotAllowed("Sorry, this is confidential information");
+        }
+        return new ResponseEntity<>(client, HttpStatus.OK);
     }
 
     @DeleteMapping("{clientId}")
@@ -55,19 +79,37 @@ public class ClientController {
         if(clientService.deleteClient(clientId, client)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Client does not exist");
         }
     }
 
     @PutMapping("{clientId}")
     @PreAuthorize("hasAnyRole('ROLE_CLIENT', 'ROLE_ADMIN')")
-    public ResponseEntity<Object> updateClient(@PathVariable("clientId") Long clientId, @RequestBody Client client) {
-        //TODO
+    public ResponseEntity<Object> updateClient(@PathVariable("clientId") Long clientId, @RequestBody Client client,
+                                               @RequestHeader("Authorization") String authorization) throws JsonProcessingException {
         Client c = clientService.findClientById(clientId);
         if(c != null) {
-            clientService.updateClient(client, c);
-            return new ResponseEntity<>(HttpStatus.OK);
+            authorization = authorization.replace("Bearer ", "");
+            String[] parts = authorization.split("\\.");
+
+            byte[] decodedBytes = Base64.getDecoder().decode(parts[1]);
+            String decodedString = new String(decodedBytes);
+            JsonNode node = mapper.readTree(decodedString);
+            String email = node.get("email").asText();
+            String role = node.get("role").asText();
+
+            if(role.equalsIgnoreCase("role_admin")) {
+                c = clientService.updateClient(client, c);
+                return new ResponseEntity<>(c, HttpStatus.OK);
+            }
+
+            Client cl = (Client) clientService.loadUserByUsername(email);
+            if(cl == null || !c.getId().equals(clientId)) {
+                throw new MethodNotAllowed("Sorry, this is confidential information");
+            }
+            c = clientService.updateClient(client, c);
+            return new ResponseEntity<>(c, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        throw new ResourceNotFoundException("Client does not exist");
     }
 }

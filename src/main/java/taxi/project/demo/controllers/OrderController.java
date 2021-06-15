@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import taxi.project.demo.entities.Client;
 import taxi.project.demo.entities.Driver;
 import taxi.project.demo.entities.Order;
+import taxi.project.demo.exceptions.MethodNotAllowed;
+import taxi.project.demo.exceptions.ResourceNotFoundException;
 import taxi.project.demo.services.ClientService;
 import taxi.project.demo.services.DriverService;
 import taxi.project.demo.services.OrderService;
@@ -48,7 +50,7 @@ public class OrderController {
         Client clientById = clientService.findClientById(clientId);
         Driver driverById = driverService.findDriverById(driverId);
         if(clientById == null || driverById == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Either Driver or Client does not exist");
         }
         Order order = new Order();
         order.setClient(clientById);
@@ -62,18 +64,14 @@ public class OrderController {
     @GetMapping("/clients/{clientId}")
     @PreAuthorize("hasAnyRole('ROLE_CLIENT', 'ROLE_ADMIN')")
     public ResponseEntity<Object> getOrdersOfClient(@PathVariable("clientId") Long clientId) {
-
         List<Order> orders = new ArrayList<>(orderService.getAllOrdersOfClient(clientId));
-
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
     @GetMapping("/drivers/{driverId}")
     @PreAuthorize("hasAnyRole('ROLE_DRIVER', 'ROLE_ADMIN')")
     public ResponseEntity<Object> getOrdersOfDiver(@PathVariable("driverId") Long driverId) {
-
         List<Order> orders = new ArrayList<>(orderService.getAllOrdersOfDriver(driverId));
-
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
@@ -83,7 +81,7 @@ public class OrderController {
                                                    @RequestHeader("Authorization") String authorization) throws JsonProcessingException {
         Order order = orderService.findOrderById(orderId);
         if(order == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Order does not exist");
         }
 
         authorization = authorization.replace("Bearer ", "");
@@ -99,7 +97,7 @@ public class OrderController {
         if(role.equalsIgnoreCase("admin") || order.getClient().getEmail().equals(email) || order.getDriver().getEmail().equals(email)) {
             return new ResponseEntity<>(order, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+        throw new MethodNotAllowed("Sorry, this is confidential information");
     }
 
     @DeleteMapping("{orderId}")
@@ -108,7 +106,7 @@ public class OrderController {
                                                       @RequestHeader("Authorization") String authorization) throws JsonProcessingException {
         Order order = orderService.findOrderById(orderId);
         if(order == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Order does not exist");
         }
 
         authorization = authorization.replace("Bearer ", "");
@@ -125,7 +123,7 @@ public class OrderController {
             orderService.deleteOrder(orderId);
             return new ResponseEntity<>(order, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+        throw new MethodNotAllowed("Sorry, this is confidential information");
     }
 
     @PatchMapping("{orderId}")
@@ -136,7 +134,7 @@ public class OrderController {
         Order order = orderService.findOrderById(orderId);
         Driver driver = driverService.findDriverById(driverId);
         if(order == null || driver == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Order or Driver does not exist");
         }
 
         authorization = authorization.replace("Bearer ", "");
@@ -154,7 +152,7 @@ public class OrderController {
             order = orderService.findOrderById(orderId);
             return new ResponseEntity<>(order, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+        throw new MethodNotAllowed("Sorry, this is confidential information");
     }
 
     @PutMapping("{orderId}")
@@ -166,14 +164,14 @@ public class OrderController {
         driver = (Driver) driverService.loadUserByUsername(driver.getEmail());
 
         if(driver == null || client ==null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Client or driver does not exist");
         }
 
         if(orderService.updateOrder(orderId, order, client, driver)) {
             order = orderService.findOrderById(orderId);
             return new ResponseEntity<>(order, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+        throw new MethodNotAllowed("Sorry, this is confidential information");
     }
 
     @GetMapping
