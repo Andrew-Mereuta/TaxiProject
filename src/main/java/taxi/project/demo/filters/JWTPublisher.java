@@ -40,12 +40,6 @@ public class JWTPublisher extends UsernamePasswordAuthenticationFilter {
             Client authenticationClientRequest = new ObjectMapper()
                     .readValue(request.getInputStream(), Client.class);
 
-//            Driver authenticationDriverRequest = new ObjectMapper()
-//                    .readValue(request.getInputStream(), Driver.class);
-//
-//
-
-
             Authentication authenticate = new UsernamePasswordAuthenticationToken(
                     authenticationClientRequest.getEmail(),
                     authenticationClientRequest.getPassword()

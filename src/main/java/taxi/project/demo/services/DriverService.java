@@ -37,7 +37,7 @@ public class DriverService implements UserDetailsService {
 
         driver.setCar(car);
         car.setDriver(driver);
-        driver.setRole(Role.DRIVER);
+        driver.setRole("ROLE_"+ Role.DRIVER.name());
         driver.setPassword(bCryptPasswordEncoder.encode(driver.getPassword()));
         driverRepository.save(driver);
         return 201;

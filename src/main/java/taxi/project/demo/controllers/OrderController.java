@@ -60,7 +60,7 @@ public class OrderController {
 
 
     @GetMapping("/clients/{clientId}")
-    @PreAuthorize("hasAnyRole('ROLE_CLIENT')")
+    @PreAuthorize("hasAnyRole('ROLE_CLIENT', 'ROLE_ADMIN')")
     public ResponseEntity<Object> getOrdersOfClient(@PathVariable("clientId") Long clientId) {
 
         List<Order> orders = new ArrayList<>(orderService.getAllOrdersOfClient(clientId));
@@ -69,7 +69,7 @@ public class OrderController {
     }
 
     @GetMapping("/drivers/{driverId}")
-    @PreAuthorize("hasAnyRole('ROLE_DRIVER')")
+    @PreAuthorize("hasAnyRole('ROLE_DRIVER', 'ROLE_ADMIN')")
     public ResponseEntity<Object> getOrdersOfDiver(@PathVariable("driverId") Long driverId) {
 
         List<Order> orders = new ArrayList<>(orderService.getAllOrdersOfDriver(driverId));
@@ -176,9 +176,8 @@ public class OrderController {
         return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
     }
 
-    //Ony for debugging
     @GetMapping
-    @PreAuthorize("hasAnyRole('ROLE_CLIENT', 'ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<Object> getAllOrders() {
         List<Order> orders = orderService.getAllOrders();
         return new ResponseEntity<>(orders, HttpStatus.OK);

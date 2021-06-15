@@ -52,7 +52,7 @@ public class DriverController {
     }
 
     @GetMapping("{driverId}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','DRIVER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DRIVER')")
     public ResponseEntity<Object> getDriverById(@PathVariable("driverId") Long driverId,
                                                 @RequestHeader("Authorization") String authorization) throws JsonProcessingException {
         Driver driver = driverService.findDriverById(driverId);

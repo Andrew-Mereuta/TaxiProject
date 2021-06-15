@@ -35,7 +35,7 @@ public class ClientService implements UserDetailsService {
                 || client.getPassword().trim().length() < 6) {
             return 405;
         }
-        client.setRole(Role.CLIENT);
+        client.setRole("ROLE_" + Role.CLIENT.name());
         client.setPassword(bCryptPasswordEncoder.encode(client.getPassword()));
         clientRepository.save(client);
         return 201;

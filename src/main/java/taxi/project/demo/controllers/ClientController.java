@@ -27,7 +27,7 @@ public class ClientController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_CLIENT')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<Client> allClients() throws JsonProcessingException {
         return clientService.findAllClients();
     }

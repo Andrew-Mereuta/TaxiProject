@@ -37,7 +37,7 @@ public class Driver implements UserDetails {
     private String name;
     private String email;
     private String password;
-    private Role role = Role.DRIVER;
+    private String role = "ROLE_" + Role.DRIVER.name();
     private boolean isBusy;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -51,7 +51,7 @@ public class Driver implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(role.name());
+        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(role);
         return Set.of(simpleGrantedAuthority);
     }
 
