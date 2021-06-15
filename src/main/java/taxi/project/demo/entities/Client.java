@@ -31,7 +31,7 @@ public class Client implements UserDetails {
     private String name;
     private String password;
     private String email;
-    private Role role = Role.CLIENT;
+    private String role = "ROLE_" + Role.CLIENT.name();
 
     @JsonIgnore
     @OneToMany(mappedBy = "client", orphanRemoval = true)
@@ -40,7 +40,7 @@ public class Client implements UserDetails {
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.name());
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
         return Set.of(authority);
     }
 
