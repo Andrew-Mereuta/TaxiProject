@@ -36,7 +36,7 @@ public class ClientController {
     }
 
     @GetMapping("{clientId}")
-    @PreAuthorize("hasRole('ROLE_CLIENT')")
+    @PreAuthorize("hasAnyRole('ROLE_CLIENT', 'ROLE_ADMIN')")
     public ResponseEntity<Object> getClientWithId(@PathVariable("clientId") Long clientId,
                                   @RequestHeader("Authorization") String authorization) throws JsonProcessingException {
         Client client = clientService.findClientById(clientId);

@@ -51,15 +51,4 @@ public class RegisterController {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-//    @PostMapping("/driver")
-//    public ResponseEntity registerDriver(@RequestBody Driver driver) {
-//        int result = clientService.registerDriver(driver);
-//        if(result == 405) {
-//            return new ResponseEntity(HttpStatus.METHOD_NOT_ALLOWED);
-//        }
-//        if(result == 201) {
-//            return new ResponseEntity(HttpStatus.CREATED);
-//        }
-//        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
 }

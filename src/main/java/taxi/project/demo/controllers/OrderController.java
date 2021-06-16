@@ -44,7 +44,7 @@ public class OrderController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_CLIENT')")
+    @PreAuthorize("hasAnyRole('ROLE_CLIENT', 'ROLE_ADMIN')")
     public ResponseEntity<Object> createOrder(@RequestParam(value = "clientId") Long clientId,
                                               @RequestParam(value = "driverId") Long driverId) {
         Client clientById = clientService.findClientById(clientId);
