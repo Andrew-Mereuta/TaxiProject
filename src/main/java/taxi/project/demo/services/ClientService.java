@@ -12,6 +12,7 @@ import taxi.project.demo.repositories.ClientRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ClientService implements UserDetailsService {
@@ -48,7 +49,9 @@ public class ClientService implements UserDetailsService {
     }
 
     public List<Client> findAllClients() {
-        return clientRepository.findAll();
+        return clientRepository.findAll().stream()
+                                            .filter(c -> c.getRole().equalsIgnoreCase("ROLE_CLIENT"))
+                                            .collect(Collectors.toList());
     }
 
 
@@ -58,7 +61,8 @@ public class ClientService implements UserDetailsService {
     }
 
     public boolean deleteClient(Long clientId, Client requestMadeClient) {
-        if(requestMadeClient.getId().equals(clientId) || requestMadeClient.getRole().equals(Role.ADMIN)) {
+        if(requestMadeClient.getId().equals(clientId)
+                || requestMadeClient.getRole().equalsIgnoreCase("ROLE_ADMIN")) {
             if (clientRepository.findById(clientId).isPresent()) {
                 clientRepository.deleteById(clientId);
                 return true;
