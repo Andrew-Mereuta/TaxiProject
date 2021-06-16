@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import taxi.project.demo.entities.Car;
 import taxi.project.demo.entities.Client;
 import taxi.project.demo.entities.Driver;
+import taxi.project.demo.exceptions.MethodNotAllowed;
 import taxi.project.demo.services.ClientService;
 import taxi.project.demo.services.DriverService;
 
@@ -44,22 +45,10 @@ public class RegisterController {
         }
 
         if (result == 405) {
-            return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+            throw new MethodNotAllowed("You are doing smth wrong");
         } else if (result == 201) {
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-//    @PostMapping("/driver")
-//    public ResponseEntity registerDriver(@RequestBody Driver driver) {
-//        int result = clientService.registerDriver(driver);
-//        if(result == 405) {
-//            return new ResponseEntity(HttpStatus.METHOD_NOT_ALLOWED);
-//        }
-//        if(result == 201) {
-//            return new ResponseEntity(HttpStatus.CREATED);
-//        }
-//        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
 }

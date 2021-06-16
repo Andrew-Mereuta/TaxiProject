@@ -32,7 +32,7 @@ public class ClientService implements UserDetailsService {
         if(client.getPassword().isEmpty()
                 || client.getEmail().isEmpty()
                 || client.getName().isEmpty()
-                || loadUserByUsername(client.getEmail()) != null
+                || c != null
                 || client.getPassword().trim().length() < 6) {
             return 405;
         }
@@ -44,8 +44,7 @@ public class ClientService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Client client = clientRepository.findByEmail(email);
-        return client;
+        return clientRepository.findByEmail(email);
     }
 
     public List<Client> findAllClients() {

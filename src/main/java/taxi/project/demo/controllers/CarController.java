@@ -66,7 +66,7 @@ public class CarController {
         String role = node.get("role").asText();
 
         Driver driver = (Driver) driverService.loadUserByUsername(email);
-        if(role.equalsIgnoreCase("admin")) {
+        if(role.equalsIgnoreCase("ROLE_ADMIN")) {
             carById = carService.changeModel(carById, model);
             return new ResponseEntity<>(carById, HttpStatus.OK);
         }
@@ -79,7 +79,7 @@ public class CarController {
 
     @PutMapping("{carId}")
     @PreAuthorize("hasAnyRole('ROLE_DRIVER', 'ROLE_ADMIN')")
-    public ResponseEntity<Object> changeModel(@PathVariable("carId") Long carId, @RequestBody Car car,
+    public ResponseEntity<Object> updateCar(@PathVariable("carId") Long carId, @RequestBody Car car,
                                               @RequestHeader("Authorization") String authorization) throws JsonProcessingException {
         Car carById = carService.findCarById(carId);
         if(carById == null) {
@@ -96,7 +96,7 @@ public class CarController {
         String role = node.get("role").asText();
 
         Driver driver = (Driver) driverService.loadUserByUsername(email);
-        if(role.equalsIgnoreCase("admin")) {
+        if(role.equalsIgnoreCase("ROLE_ADMIN")) {
             carById = carService.updateCar(carById, car, driver);
             return new ResponseEntity<>(carById, HttpStatus.OK);
         }
@@ -126,7 +126,7 @@ public class CarController {
         String role = node.get("role").asText();
 
         Driver driver = (Driver) driverService.loadUserByUsername(email);
-        if(role.equalsIgnoreCase("admin")) {
+        if(role.equalsIgnoreCase("ROLE_ADMIN")) {
             carService.deleteCar(carId);
             return new ResponseEntity<>(HttpStatus.OK);
         }

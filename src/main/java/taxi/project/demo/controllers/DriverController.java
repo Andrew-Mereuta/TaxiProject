@@ -71,7 +71,7 @@ public class DriverController {
         String email = node.get("email").asText();
         String role = node.get("role").asText();
 
-        if(role.equalsIgnoreCase("admin")) {
+        if(role.equalsIgnoreCase("ROLE_ADMIN")) {
             return new ResponseEntity<>(driver, HttpStatus.OK);
         }
 
@@ -100,7 +100,7 @@ public class DriverController {
         String email = node.get("email").asText();
         String role = node.get("role").asText();
 
-        if(role.equalsIgnoreCase("admin")) {
+        if(role.equalsIgnoreCase("ROLE_ADMIN")) {
             driverService.deleteDriverById(driverId);
             return new ResponseEntity<>(driver, HttpStatus.OK);
         }
@@ -132,17 +132,17 @@ public class DriverController {
         String email = node.get("email").asText();
         String role = node.get("role").asText();
 
-        if(role.equalsIgnoreCase("admin")) {
-            driverService.updateDriver(driver, currentDriver);
-            return new ResponseEntity<>(driver, HttpStatus.OK);
+        if(role.equalsIgnoreCase("ROLE_ADMIN")) {
+            currentDriver = driverService.updateDriver(driver, currentDriver);
+            return new ResponseEntity<>(currentDriver, HttpStatus.OK);
         }
 
         Driver dr = (Driver) driverService.loadUserByUsername(email);
         if(dr == null || !dr.getId().equals(driverId)) {
             throw new MethodNotAllowed("Sorry, this is confidential information");
         }
-        driverService.updateDriver(driver, currentDriver);
-        return new ResponseEntity<>(driver, HttpStatus.OK);
+        currentDriver = driverService.updateDriver(driver, currentDriver);
+        return new ResponseEntity<>(currentDriver, HttpStatus.OK);
     }
 
 

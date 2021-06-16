@@ -61,9 +61,10 @@ public class DriverService implements UserDetailsService {
     }
 
 
-    public void updateDriver(Driver driver, Driver currentDriver) {
+    public Driver updateDriver(Driver driver, Driver currentDriver) {
         driverRepository.updateDriver(driver.getName(), bCryptPasswordEncoder.encode(driver.getPassword()), currentDriver.getId());
         currentDriver.setPassword(bCryptPasswordEncoder.encode(driver.getPassword()));
         currentDriver.setName(driver.getName());
+        return currentDriver;
     }
 }
