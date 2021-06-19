@@ -8,7 +8,6 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import taxi.project.demo.entities.Car;
-import taxi.project.demo.entities.Client;
 import taxi.project.demo.entities.Driver;
 import taxi.project.demo.exceptions.MethodNotAllowed;
 import taxi.project.demo.exceptions.ResourceNotFoundException;
@@ -103,6 +102,72 @@ public class DriverControllerTest {
         when(driverService.loadUserByUsername(drEmail)).thenReturn(null);
         assertThrows(MethodNotAllowed.class, () -> {
             driverController.getDriverById(1L, driverAuth);
+        });
+    }
+
+    @Test
+    public void deleteDriverByIdTest1() {
+        when(driverService.findDriverById(4L)).thenReturn(null);
+        assertThrows(ResourceNotFoundException.class, () -> {
+            driverController.deleteDriverById(4L, driverAuth);
+        });
+    }
+
+    @Test
+    public void deleteDriverByIdTest2() throws JsonProcessingException {
+        when(driverService.findDriverById(1L)).thenReturn(drivers.get(0));
+        assertEquals(new ResponseEntity<>(drivers.get(0), HttpStatus.OK),
+                driverController.deleteDriverById(1L, adminAuth));
+    }
+
+    @Test
+    public void deleteDriverByIdTest3() throws JsonProcessingException {
+        when(driverService.findDriverById(1L)).thenReturn(drivers.get(0));
+        when(driverService.loadUserByUsername(drEmail)).thenReturn(drivers.get(0));
+        assertEquals(new ResponseEntity<>(drivers.get(0), HttpStatus.OK), driverController.deleteDriverById(1L, driverAuth));
+    }
+
+    @Test
+    public void deleteDriverByIdTest4() throws JsonProcessingException {
+        when(driverService.findDriverById(1L)).thenReturn(drivers.get(0));
+        when(driverService.loadUserByUsername(drEmail)).thenReturn(null);
+        assertThrows(MethodNotAllowed.class, () -> {
+            driverController.deleteDriverById(1L, driverAuth);
+        });
+    }
+
+    @Test
+    public void updateDriverTest1() {
+        when(driverService.findDriverById(4L)).thenReturn(null);
+        assertThrows(ResourceNotFoundException.class, () -> {
+            driverController.updateDriver(4L, driverAuth, new Driver());
+        });
+    }
+
+    @Test
+    public void updateDriverTest2() throws JsonProcessingException {
+        when(driverService.findDriverById(1L)).thenReturn(drivers.get(0));
+        when(driverService.updateDriver(any(Driver.class), any(Driver.class))).thenReturn(drivers.get(1));
+        assertEquals(new ResponseEntity<>(drivers.get(1), HttpStatus.OK),
+                driverController.updateDriver(1L, adminAuth, drivers.get(1)));
+    }
+
+    @Test
+    public void updateDriverTest3() throws JsonProcessingException {
+        when(driverService.findDriverById(1L)).thenReturn(drivers.get(0));
+        when(driverService.updateDriver(any(Driver.class), any(Driver.class))).thenReturn(drivers.get(1));
+        when(driverService.loadUserByUsername(drEmail)).thenReturn(drivers.get(0));
+        assertEquals(new ResponseEntity<>(drivers.get(1), HttpStatus.OK),
+                driverController.updateDriver(1L, driverAuth, drivers.get(1)));
+    }
+
+    @Test
+    public void updateDriverTest4() throws JsonProcessingException {
+        when(driverService.findDriverById(1L)).thenReturn(drivers.get(0));
+        when(driverService.loadUserByUsername(drEmail)).thenReturn(null);
+
+        assertThrows(MethodNotAllowed.class, () -> {
+            driverController.updateDriver(1L, driverAuth, drivers.get(1));
         });
     }
 }
