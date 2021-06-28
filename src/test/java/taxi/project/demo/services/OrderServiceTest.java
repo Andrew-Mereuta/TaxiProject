@@ -80,8 +80,9 @@ public class OrderServiceTest {
 
     @Test
     public void deleteOrderTest() {
+        when(orderRepository.findById(1L)).thenReturn(java.util.Optional.ofNullable(orders.get(0)));
         orderService.deleteOrder(1L);
-        verify(orderRepository, times(1)).deleteById(1L);
+        verify(orderRepository, times(1)).delete(any(Order.class));
     }
 
     @Test

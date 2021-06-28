@@ -26,6 +26,7 @@ public class OrderSerializer extends StdSerializer<Order> {
         Driver driver = order.getDriver();
         Car car = driver.getCar();
         jgen.writeStartObject();
+//        jgen.writeNumberField("id", order.getId());
         jgen.writeNumberField("price", order.getPrice());
         jgen.writeStringField("clientEmail", client.getEmail());
         jgen.writeStringField("driverEmail", driver.getEmail());

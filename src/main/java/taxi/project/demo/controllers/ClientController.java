@@ -105,7 +105,7 @@ public class ClientController {
             }
 
             Client cl = (Client) clientService.loadUserByUsername(email);
-            if(cl == null || !c.getId().equals(clientId)) {
+            if(cl == null || !cl.getId().equals(clientId)) {
                 throw new MethodNotAllowed("Sorry, this is confidential information");
             }
             c = clientService.updateClient(client, c);

@@ -43,7 +43,11 @@ public class OrderService {
     }
 
     public void deleteOrder(Long orderId) {
-        orderRepository.deleteById(orderId);
+        Order order = orderRepository.findById(orderId).orElse(null);
+        order.setDriver(null);
+        order.setClient(null);
+        orderRepository.save(order);
+        orderRepository.delete(order);
     }
 
     public void changeDriver(Order order, Driver driver) {

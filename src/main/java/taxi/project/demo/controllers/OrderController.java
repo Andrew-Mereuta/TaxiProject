@@ -121,7 +121,7 @@ public class OrderController {
 
         if(role.equalsIgnoreCase("ROLE_ADMIN") || order.getClient().getEmail().equals(email) || order.getDriver().getEmail().equals(email)) {
             orderService.deleteOrder(orderId);
-            return new ResponseEntity<>(order, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         throw new MethodNotAllowed("Sorry, this is confidential information");
     }

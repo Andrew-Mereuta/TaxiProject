@@ -45,7 +45,7 @@ public class RegisterController {
         }
 
         if (result == 405) {
-            throw new MethodNotAllowed("You are doing smth wrong");
+            throw new MethodNotAllowed("You are doing smth wrong\n May be you are already registered");
         } else if (result == 201) {
             return new ResponseEntity<>(HttpStatus.CREATED);
         }

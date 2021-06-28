@@ -9,7 +9,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import taxi.project.demo.enums.Role;
 import taxi.project.demo.serializers.DriverSerializer;
-import taxi.project.demo.serializers.OrderSerializer;
 
 import javax.persistence.*;
 import java.util.ArrayList;

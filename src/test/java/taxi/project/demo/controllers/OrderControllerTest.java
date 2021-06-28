@@ -103,7 +103,7 @@ public class OrderControllerTest {
     @Test
     public void deleteSpecificOrderTest2() throws JsonProcessingException {
         when(orderService.findOrderById(1L)).thenReturn(orders.get(0));
-        assertEquals(new ResponseEntity<>(orders.get(0), HttpStatus.OK),
+        assertEquals(new ResponseEntity<>( HttpStatus.OK),
                 orderController.deleteSpecificOrder(1L, adminAuth));
     }
 

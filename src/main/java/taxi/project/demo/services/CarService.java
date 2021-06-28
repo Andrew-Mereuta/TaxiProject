@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import taxi.project.demo.entities.Car;
 import taxi.project.demo.entities.Driver;
 import taxi.project.demo.repositories.CarRepository;
+import taxi.project.demo.repositories.DriverRepository;
 
 import java.util.List;
 
@@ -12,10 +13,12 @@ import java.util.List;
 public class CarService {
 
     private final CarRepository carRepository;
+    private final DriverRepository driverRepository;
 
     @Autowired
-    public CarService(CarRepository carRepository) {
+    public CarService(CarRepository carRepository, DriverRepository driverRepository) {
         this.carRepository = carRepository;
+        this.driverRepository = driverRepository;
     }
 
     public Car findCarById(Long carId){
@@ -47,6 +50,8 @@ public class CarService {
     }
 
     public void deleteCar(Long carId) {
-        carRepository.deleteById(carId);
+        Car car = carRepository.findById(carId).orElse(null);
+        Driver d = car.getDriver();
+        driverRepository.deleteById(d.getId());
     }
 }

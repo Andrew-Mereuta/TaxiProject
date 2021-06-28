@@ -6,6 +6,7 @@ import org.mockito.Mockito;
 import taxi.project.demo.entities.Car;
 import taxi.project.demo.entities.Driver;
 import taxi.project.demo.repositories.CarRepository;
+import taxi.project.demo.repositories.DriverRepository;
 
 import java.util.List;
 
@@ -16,7 +17,8 @@ import static org.mockito.Mockito.*;
 public class CarServiceTest {
 
     private final CarRepository carRepository = Mockito.mock(CarRepository.class);
-    private final CarService carService = new CarService(carRepository);
+    private final DriverRepository driverRepository = Mockito.mock(DriverRepository.class);
+    private final CarService carService = new CarService(carRepository, driverRepository);
     private Driver driver = new Driver(1L, "Mr.Rock", "rock@mail.com",
             "password", "ROLE_DRIVER", false,
             null, null);
@@ -86,8 +88,8 @@ public class CarServiceTest {
 
     @Test
     public void deleteCarTest() {
+        when(carRepository.findById(1L)).thenReturn(java.util.Optional.ofNullable(car));
         carService.deleteCar(1L);
-        verify(carRepository, times(1)).deleteById(1L);
-        verifyNoMoreInteractions(carRepository);
+        verify(driverRepository, times(1)).deleteById(1L);
     }
 }
