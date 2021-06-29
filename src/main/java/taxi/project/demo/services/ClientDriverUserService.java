@@ -29,9 +29,6 @@ public class ClientDriverUserService implements UserDetailsService {
         if(client != null) {
             return client;
         }
-        if(driver != null){
-            return driver;
-        }
-        return null;
+        return driver;
     }
 }

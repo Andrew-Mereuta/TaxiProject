@@ -31,7 +31,7 @@ public class ClientController {
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public List<Client> allClients() throws JsonProcessingException {
+    public List<Client> allClients() {
         return clientService.findAllClients();
     }
 
@@ -64,7 +64,8 @@ public class ClientController {
 
     @DeleteMapping("{clientId}")
     @PreAuthorize("hasAnyRole('ROLE_CLIENT', 'ROLE_ADMIN')")
-    public ResponseEntity<Object> deleteClient(@PathVariable("clientId") Long clientId, @RequestHeader("Authorization") String authorization) throws JsonProcessingException {
+    public ResponseEntity<Object> deleteClient(@PathVariable("clientId") Long clientId,
+                                               @RequestHeader("Authorization") String authorization) throws JsonProcessingException {
         authorization = authorization.replace("Bearer ", "");
         String[] parts = authorization.split("\\.");
 
@@ -104,7 +105,7 @@ public class ClientController {
             }
 
             Client cl = (Client) clientService.loadUserByUsername(email);
-            if(cl == null || !c.getId().equals(clientId)) {
+            if(cl == null || !cl.getId().equals(clientId)) {
                 throw new MethodNotAllowed("Sorry, this is confidential information");
             }
             c = clientService.updateClient(client, c);

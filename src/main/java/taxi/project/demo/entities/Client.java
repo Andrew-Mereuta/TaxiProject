@@ -2,10 +2,7 @@ package taxi.project.demo.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,7 +10,10 @@ import taxi.project.demo.enums.Role;
 import taxi.project.demo.serializers.ClientSerializer;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="client")
@@ -21,6 +21,7 @@ import java.util.*;
 @AllArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode
 @JsonSerialize(using = ClientSerializer.class)
 public class Client implements UserDetails {
 

@@ -40,7 +40,7 @@ public class OrderController {
                            OrderService orderService) {
         this.clientService = clientService;
         this.driverService = driverService;
-        this. orderService = orderService;
+        this.orderService = orderService;
     }
 
     @PostMapping
@@ -94,7 +94,7 @@ public class OrderController {
         String email = node.get("email").asText();
         String role = node.get("role").asText();
 
-        if(role.equalsIgnoreCase("admin") || order.getClient().getEmail().equals(email) || order.getDriver().getEmail().equals(email)) {
+        if(role.equalsIgnoreCase("ROLE_ADMIN") || order.getClient().getEmail().equals(email) || order.getDriver().getEmail().equals(email)) {
             return new ResponseEntity<>(order, HttpStatus.OK);
         }
         throw new MethodNotAllowed("Sorry, this is confidential information");
@@ -119,9 +119,9 @@ public class OrderController {
         String email = node.get("email").asText();
         String role = node.get("role").asText();
 
-        if(role.equalsIgnoreCase("admin") || order.getClient().getEmail().equals(email) || order.getDriver().getEmail().equals(email)) {
+        if(role.equalsIgnoreCase("ROLE_ADMIN") || order.getClient().getEmail().equals(email) || order.getDriver().getEmail().equals(email)) {
             orderService.deleteOrder(orderId);
-            return new ResponseEntity<>(order, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         throw new MethodNotAllowed("Sorry, this is confidential information");
     }
@@ -147,7 +147,7 @@ public class OrderController {
         String email = node.get("email").asText();
         String role = node.get("role").asText();
 
-        if(role.equalsIgnoreCase("admin") || order.getClient().getEmail().equals(email)) {
+        if(role.equalsIgnoreCase("ROLE_ADMIN") || order.getClient().getEmail().equals(email)) {
             orderService.changeDriver(order, driver);
             order = orderService.findOrderById(orderId);
             return new ResponseEntity<>(order, HttpStatus.OK);
