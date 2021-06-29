@@ -1,10 +1,14 @@
 pipeline {
     agent any
-
+    tools {
+        maven 'Maven'
+    }
     stages {
         stage('Build') {
             steps {
                 echo 'Building..'
+                bat "mvn -version"
+                bat "mvn clean install"
             }
         }
         stage('Test') {
@@ -13,4 +17,10 @@ pipeline {
             }
         }
     }
+    post { // good practice to clean up workspace
+        always {
+            cleanWs()
+        }
+    }
 }
+// bat instead of sh
