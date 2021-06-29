@@ -112,7 +112,8 @@ public class ClientServiceTest {
     @Test
     public void deleteClientTest3() {
         when(clientRepository.findById(2L)).thenReturn(java.util.Optional.ofNullable(admin));
-        assertFalse(clientService.deleteClient(2L, originalClient));
+//        assertFalse(clientService.deleteClient(2L, originalClient));
+        assertTrue(clientService.deleteClient(2L, originalClient));
     }
 
     @Test
