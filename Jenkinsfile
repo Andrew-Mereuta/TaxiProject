@@ -4,6 +4,12 @@ pipeline {
         maven 'Maven'
     }
     stages {
+        stage('Compile') {
+            steps {
+                echo 'Compiling..'
+                bat "mvn compile"
+            }
+        }
         stage('Build') {
             steps {
                 echo 'Building..'
