@@ -27,7 +27,7 @@ pipeline {
             steps {
                 echo 'Postman testing...'
                 bat "npm -v"
-                bat "newman -v"
+                bat "newman run https://www.getpostman.com/collections/94310e512a387b6414c5"
             }
         }
     }
@@ -38,3 +38,4 @@ pipeline {
     }
 }
 // bat instead of sh
+// postman link https://www.getpostman.com/collections/94310e512a387b6414c5
