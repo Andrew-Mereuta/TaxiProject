@@ -35,7 +35,7 @@ pipeline {
             steps {
                 echo 'JMeter testing..'
                 // works only if the server is up and running
-                bat "C:\\Users\\Simple\\Desktop\\jmeter\\apache-jmeter-5.4.1\\bin\\jmeter.bat -n -t C:\\Users\\Simple\\Desktop\\jmeter\\jmeter-tests\\clients.jmx -e -o C:\\Users\\Simple\\Desktop\\jmeter\\jmeter-tests\\report"
+                bat "C:\\Users\\Simple\\Desktop\\jmeter\\apache-jmeter-5.4.1\\bin\\jmeter.bat -n -t C:\\Users\\Simple\\Desktop\\jmeter\\jmeter-tests\\clients.jmx -l report.html -e -o C:\\Users\\Simple\\Desktop\\jmeter\\jmeter-tests\\report"
                 // bat "C:\\Users\\Simple\\Desktop\\jmeter\\apache-jmeter-5.4.1\\bin\\jmeter.bat -n -t C:\\Users\\Simple\\Desktop\\jmeter\\jmeter-tests\\clients.jmx" // -l report.html
             }
         }
