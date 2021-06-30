@@ -3,6 +3,10 @@ pipeline {
     tools {
         maven 'Maven'
     }
+    environment {
+        dockerImage = ''
+        registry = 'andrewmereuta/taxi-project'
+    }
     stages {
         stage('Compile') {
             steps {
@@ -21,6 +25,12 @@ pipeline {
             steps {
                 echo 'Testing..'
                 bat "mvn test"
+            }
+        }
+        stage('Docker Image Build') {
+            steps {
+                echo 'Building docker image..'
+                dockerImage = docker.build registry
             }
         }
         stage('Postman Test') {

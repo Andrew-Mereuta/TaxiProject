@@ -93,6 +93,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>taxi-project</finalName>
     </build>
 
 </project>
