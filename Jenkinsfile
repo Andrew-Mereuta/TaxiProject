@@ -4,8 +4,9 @@ pipeline {
         maven 'Maven'
     }
     environment {
+        registry = "andrewmereuta/taxi-project"
+        registryCredential = 'dockerHub'
         dockerImage = ''
-        registry = 'andrewmereuta/taxi-project'
     }
     stages {
         stage('Compile') {
@@ -30,9 +31,23 @@ pipeline {
         stage('Docker Image Build') {
             steps {
                 echo 'Building docker image..'
-                bat "docker build -f Dockerfile -t taxi-project ."
+                //bat "docker build -f Dockerfile -t taxi-project ."
+                script {
+                    dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                }
             }
         }
+        ///////////////
+        stage('Deploy our image') {
+            steps {
+                script {
+                    docker.withRegistry( '', registryCredential ) {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
+        //////////////////
         stage('Postman Test') {
             steps {
                 echo 'Postman testing..'
