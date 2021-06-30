@@ -23,6 +23,12 @@ pipeline {
                 bat "mvn test"
             }
         }
+        stage('Postman Test') {
+            steps {
+                echo 'Postman testing...'
+                bat "cd C:\Users\Simple\Desktop\postmanTaxi"
+            }
+        }
     }
     post { // good practice to clean up workspace
         always {
