@@ -27,7 +27,7 @@ pipeline {
             steps {
                 echo 'Postman testing...'
                 bat "npm -v"
-                bat "newman run https://www.getpostman.com/collections/94310e512a387b6414c5"
+                bat "C:\Users\Simple\AppData\Roaming\npm\newman run https://www.getpostman.com/collections/94310e512a387b6414c5"
             }
         }
     }
