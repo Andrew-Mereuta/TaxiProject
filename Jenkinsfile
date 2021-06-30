@@ -28,7 +28,7 @@ pipeline {
                 echo 'Postman testing..'
                 bat "npm -v"
                 // works only if the server is up and running
-                bat "C:\\Users\\Simple\\AppData\\Roaming\\npm\\newman run TaxiOrderedCollection.postman_collection --reporters html --reporter-html-export C:\\Users\\Simple\\Desktop\\postmanTaxi\\report\\report.html"
+                bat "C:\\Users\\Simple\\AppData\\Roaming\\npm\\newman run https://www.getpostman.com/collections/94310e512a387b6414c5 --reporters html --reporter-html-export C:\\Users\\Simple\\Desktop\\postmanTaxi\\report\\report.html"
             }
         }
         stage('JMeter Test') {
@@ -47,4 +47,3 @@ pipeline {
 }
 // bat instead of sh
 // postman link https://www.getpostman.com/collections/94310e512a387b6414c5
-// newman run TaxiOrderedCollection.postman_collection --reporters html --reporter-html-export C:\Users\Simple\Desktop\postmanTaxi\report\report.html
