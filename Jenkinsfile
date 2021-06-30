@@ -26,6 +26,8 @@ pipeline {
         stage('Postman Test') {
             steps {
                 echo 'Postman testing...'
+                bat "npm -v"
+                bat "newman -v"
             }
         }
     }
