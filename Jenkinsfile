@@ -30,7 +30,9 @@ pipeline {
         stage('Docker Image Build') {
             steps {
                 echo 'Building docker image..'
-                dockerImage = docker.build registry
+                script {
+                    dockerImage = docker.build registry
+                }
             }
         }
         stage('Postman Test') {
