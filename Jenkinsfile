@@ -26,7 +26,7 @@ pipeline {
         stage('Postman Test') {
             steps {
                 echo 'Postman testing...'
-                bat "cd C:\Users\Simple\Desktop\postmanTaxi"
+                bat 'cd C:\Users\Simple\Desktop\postmanTaxi'
             }
         }
     }
