@@ -30,9 +30,7 @@ pipeline {
         stage('Docker Image Build') {
             steps {
                 echo 'Building docker image..'
-                script {
-                    dockerImage = docker.build registry
-                }
+                bat "docker build -f Dockerfile -t taxi-project ."
             }
         }
         stage('Postman Test') {
