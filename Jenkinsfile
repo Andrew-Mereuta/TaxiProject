@@ -9,6 +9,15 @@ pipeline {
         dockerImage = ''
     }
     stages {
+        stage("Read from Maven POM"){
+            steps{
+                script{
+                    projectArtifactId = readMavenPom().getArtifactId()
+                    projectVersion = readMavenPom().getModelVersion()
+                }
+                echo "Building ${projectArtifactId}:${projectVersion}"
+            }
+        }
         stage('Compile') {
             steps {
                 echo 'Compiling..'
@@ -28,26 +37,59 @@ pipeline {
                 bat "mvn test"
             }
         }
-        ////////////////
-        stage('Docker Image Build') {
-            steps {
-                echo 'Building docker image..'
-                //bat "docker build -f Dockerfile -t taxi-project ."
-                script {
-                    dockerImage = docker.build registry + ":$BUILD_NUMBER"
-                }
+        stage("Build JAR file"){
+            steps{
+                bat "mvn install -Dmaven.test.skip=true"
             }
         }
-        //
-        stage('Deploy our image') {
+        stage("Build image"){
             steps {
-                script {
-                    docker.withRegistry( '', registryCredential ) {
-                        dockerImage.push()
+                echo "Building service image and pushing it to DockerHub"
+                    withCredentials([usernamePassword(credentialsId: 'dockerHub', usernameVariable: "dockerLogin",
+                        passwordVariable: "dockerPassword")]) {
+                            bat "docker login -u ${dockerLogin} -p ${dockerPassword}"
+                            bat "docker image build -t ${dockerLogin}/${projectVersion} ."
+                            bat "docker push ${dockerLogin}/${projectVersion}" // docker push andrewmereuta/taxi-project:$BUILD_NUMBER
+                   }
+                echo "Building image and pushing it to DockerHub is successful done"
+            }
+        }
+        //////////////////////////////////////////////////////////////////////////////////////
+        stage("Deploy"){
+            steps{
+                bat "docker-compose --file docker-compose.yml up --detach"
+                    timeout(time: 60, unit: 'SECONDS') {
+                        waitUntil(initialRecurrencePeriod: 2000) {
+                            script {
+                                def result = sh script: "curl --silent --output /dev/null http://localhost:8080/clients",
+                                returnStatus: true
+                                return (result == 0)
+                                }
+                            }
                     }
-                }
+                echo "Server is up"
             }
         }
+        ////////////////
+//         stage('Docker Image Build') {
+//             steps {
+//                 echo 'Building docker image..'
+//                 //bat "docker build -f Dockerfile -t taxi-project ."
+//                 script {
+//                     dockerImage = docker.build registry + ":$BUILD_NUMBER"
+//                 }
+//             }
+//         }
+//         //
+//         stage('Deploy our image') {
+//             steps {
+//                 script {
+//                     docker.withRegistry( '', registryCredential ) {
+//                         dockerImage.push()
+//                     }
+//                 }
+//             }
+//         }
         stage('Postman Test') {
             steps {
                 echo 'Postman testing..'
