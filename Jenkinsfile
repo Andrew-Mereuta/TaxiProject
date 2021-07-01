@@ -3,11 +3,6 @@ pipeline {
     tools {
         maven 'Maven'
     }
-//     environment {
-//         registry = "andrewmereuta/taxi-project"
-//         registryCredential = 'dockerHub'
-//         dockerImage = ''
-//     }
     stages {
         stage("Read from Maven POM"){
             steps{
@@ -72,26 +67,6 @@ pipeline {
                 echo "Server is up"
             }
         }
-        ////////////////
-//         stage('Docker Image Build') {
-//             steps {
-//                 echo 'Building docker image..'
-//                 //bat "docker build -f Dockerfile -t taxi-project ."
-//                 script {
-//                     dockerImage = docker.build registry + ":$BUILD_NUMBER"
-//                 }
-//             }
-//         }
-//         //
-//         stage('Deploy our image') {
-//             steps {
-//                 script {
-//                     docker.withRegistry( '', registryCredential ) {
-//                         dockerImage.push()
-//                     }
-//                 }
-//             }
-//         }
         stage('Postman Test') {
             steps {
                 echo 'Postman testing..'
