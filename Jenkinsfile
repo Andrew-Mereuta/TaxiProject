@@ -53,7 +53,7 @@ pipeline {
         stage("Deploy"){
             steps{
                 bat "docker-compose --file docker-compose.yml up --detach"
-                sleep(30)
+                sleep(45)
 //                     timeout(time: 120, unit: 'SECONDS') {
 //                         waitUntil(initialRecurrencePeriod: 10000) {
 //                             script {
