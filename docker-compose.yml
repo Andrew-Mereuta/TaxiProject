@@ -41,10 +41,10 @@ services:
     container_name: mysqldb
     restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=taxiDB
       - MYSQL_USER=root
-      - MYSQL_PASSWORD=password
+      - MYSQL_PASSWORD=root
     ports:
       - 3308:3306
 
@@ -58,6 +58,6 @@ services:
     environment:
       - DATABASE_HOST=mysqldb
       - DATABASE_USER=root
-      - DATABASE_PASSWORD=password
+      - DATABASE_PASSWORD=root
       - DATABASE_NAME=taxiDB
       - DATABASE_PORT=3306
