@@ -50,7 +50,7 @@ public class Security extends WebSecurityConfigurerAdapter {
                 .addFilter(new JWTPublisher(authenticationManager(), clientService, driverService))
                 .addFilterAfter(new JWTFilter(), JWTPublisher.class)
                 .authorizeRequests()
-                .antMatchers("/clients/login", "/register", "/login","/clients").permitAll()
+                .antMatchers("/clients/login", "/register", "/login","/test").permitAll()
                 .anyRequest().authenticated();
 
     }
