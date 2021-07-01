@@ -3,11 +3,11 @@ pipeline {
 //     tools {
 //         maven 'Maven'
 //     }
-    environment {
-        registry = "andrewmereuta/taxi-project"
-        registryCredential = 'dockerHub'
-        dockerImage = ''
-    }
+//     environment {
+//         registry = "andrewmereuta/taxi-project"
+//         registryCredential = 'dockerHub'
+//         dockerImage = ''
+//     }
     stages {
         stage("Read from Maven POM"){
             steps{
