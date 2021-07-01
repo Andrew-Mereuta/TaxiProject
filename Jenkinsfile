@@ -61,7 +61,7 @@ pipeline {
                     timeout(time: 60, unit: 'SECONDS') {
                         waitUntil(initialRecurrencePeriod: 2000) {
                             script {
-                                def result = sh script: "curl --silent --output /dev/null http://localhost:8080/clients",
+                                def result = sh script: "curl --silent --output /dev/null http://localhost:8080/test",
                                 returnStatus: true
                                 return (result == 0)
                                 }
