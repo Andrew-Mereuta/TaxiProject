@@ -28,6 +28,7 @@ pipeline {
                 bat "mvn test"
             }
         }
+        ////////////////
         stage('Docker Image Build') {
             steps {
                 echo 'Building docker image..'
@@ -37,7 +38,7 @@ pipeline {
                 }
             }
         }
-        ///////////////
+        //
         stage('Deploy our image') {
             steps {
                 script {
@@ -47,7 +48,6 @@ pipeline {
                 }
             }
         }
-        //////////////////
         stage('Postman Test') {
             steps {
                 echo 'Postman testing..'

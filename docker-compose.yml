@@ -1,0 +1,35 @@
+version: "3.7"
+
+services:
+  mysql_database:
+    image: mysql:8
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: taxiDB
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_PASSWORD: password
+      MYSQL_USER: root
+    ports:
+      - 3308:3308 # native_port -> inside_container_port
+#    expose:
+#      - 3306
+#    volumes:
+#      - mysql-data:/var/lib/mysql
+
+  service:
+    image: andrewmereuta/taxi-project:32
+    container_name: service
+    depends_on:
+      - mysql_database
+    ports:
+      - 9080:8080
+    environment:
+      DATABASE_HOST: mysqldb
+      DATABASE_USER: root
+      DATABASE_PASSWORD: password
+      DATABASE_NAME: taxiDB
+      DATABASE_PORT: 3306
+
+#volumes:
+#  mysql-data:
