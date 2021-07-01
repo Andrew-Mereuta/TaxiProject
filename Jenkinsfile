@@ -48,8 +48,8 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'dockerHub', usernameVariable: "dockerLogin",
                         passwordVariable: "dockerPassword")]) {
                             bat "docker login -u ${dockerLogin} -p ${dockerPassword}"
-                            bat "docker image build -t ${dockerLogin}/${projectVersion} ."
-                            bat "docker push ${dockerLogin}/${projectVersion}" // docker push andrewmereuta/taxi-project:$BUILD_NUMBER
+                            bat "docker image build -t ${dockerLogin}/${projectArtifactId} ."
+                            bat "docker push ${dockerLogin}/${projectArtifactId}" // docker push andrewmereuta/taxi-project:$BUILD_NUMBER
                    }
                 echo "Building image and pushing it to DockerHub is successful done"
             }

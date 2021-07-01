@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>taxi.project</groupId>
-    <artifactId>taxiProject</artifactId>
+    <artifactId>taxi-project</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>taxiProject</name>
     <description>Taxi Project Implementation</description>
