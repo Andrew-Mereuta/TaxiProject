@@ -1,8 +1,8 @@
 pipeline {
     agent any
-    tools {
-        maven 'Maven'
-    }
+//     tools {
+//         maven 'Maven'
+//     }
     environment {
         registry = "andrewmereuta/taxi-project"
         registryCredential = 'dockerHub'
