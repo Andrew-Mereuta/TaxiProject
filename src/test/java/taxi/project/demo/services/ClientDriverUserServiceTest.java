@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import taxi.project.demo.entities.Client;
 import taxi.project.demo.entities.Driver;
+import taxi.project.demo.exceptions.ResourceNotFoundException;
 import taxi.project.demo.repositories.ClientRepository;
 import taxi.project.demo.repositories.DriverRepository;
 
@@ -60,6 +61,8 @@ public class ClientDriverUserServiceTest {
     public void loadUserByUsernameTest3() {
         when(clientRepository.findByEmail("random@email.com")).thenReturn(null);
         when(driverRepository.findByEmail("random@email.com")).thenReturn(null);
-        Assertions.assertNull(userService.loadUserByUsername("random@email.com"));
+        Assertions.assertThrows(ResourceNotFoundException.class, ()->{
+            userService.loadUserByUsername("random@email.com");
+        });
     }
 }
