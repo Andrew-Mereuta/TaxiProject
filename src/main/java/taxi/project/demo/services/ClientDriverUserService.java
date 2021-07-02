@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import taxi.project.demo.entities.Client;
 import taxi.project.demo.entities.Driver;
+import taxi.project.demo.exceptions.ResourceNotFoundException;
 import taxi.project.demo.repositories.ClientRepository;
 import taxi.project.demo.repositories.DriverRepository;
 
@@ -28,7 +29,10 @@ public class ClientDriverUserService implements UserDetailsService {
         Driver driver = driverRepository.findByEmail(email);
         if(client != null) {
             return client;
+        } else if (driver != null) {
+            return driver;
+        } else {
+            throw new ResourceNotFoundException("Sorry you are not registered in our database");
         }
-        return driver;
     }
 }
