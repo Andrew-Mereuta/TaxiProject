@@ -64,7 +64,7 @@ pipeline {
 //                                 }
 //                             }
 //                     }
-                echo "Server is up"
+                echo "Server is hopefully up"
             }
         }
         stage('Postman Test') {
