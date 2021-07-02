@@ -44,26 +44,15 @@ pipeline {
                         passwordVariable: "dockerPassword")]) {
                             bat "docker login -u ${dockerLogin} -p ${dockerPassword}"
                             bat "docker image build -t ${dockerLogin}/${projectArtifactId} ."
-                            bat "docker push ${dockerLogin}/${projectArtifactId}" // docker push andrewmereuta/taxi-project:$BUILD_NUMBER
+                            bat "docker push ${dockerLogin}/${projectArtifactId}"
                    }
                 echo "Building image and pushing it to DockerHub is successful done"
             }
         }
-        //////////////////////////////////////////////////////////////////////////////////////
         stage("Deploy"){
             steps{
                 bat "docker-compose --file docker-compose.yml up --detach"
                 sleep(45)
-//                     timeout(time: 120, unit: 'SECONDS') {
-//                         waitUntil(initialRecurrencePeriod: 10000) {
-//                             script {
-//
-//                                 def result = sh script: "curl --silent --output /dev/null http://localhost:8080/test",
-//                                 returnStatus: true
-//                                 return (result == 0)
-//                                 }
-//                             }
-//                     }
                 echo "Server is hopefully up"
             }
         }
@@ -80,7 +69,6 @@ pipeline {
                 echo 'JMeter testing..'
                 // works only if the server is up and running
                 bat "C:\\Users\\Simple\\Desktop\\jmeter\\apache-jmeter-5.4.1\\bin\\jmeter.bat -n -t C:\\Users\\Simple\\Desktop\\jmeter\\jmeter-tests\\clients.jmx -l report.html -e -o C:\\Users\\Simple\\Desktop\\jmeter\\jmeter-tests\\report"
-                // bat "C:\\Users\\Simple\\Desktop\\jmeter\\apache-jmeter-5.4.1\\bin\\jmeter.bat -n -t C:\\Users\\Simple\\Desktop\\jmeter\\jmeter-tests\\clients.jmx" // -l report.html
             }
         }
     }
@@ -90,5 +78,3 @@ pipeline {
         }
     }
 }
-// bat instead of sh
-// postman link https://www.getpostman.com/collections/94310e512a387b6414c5
