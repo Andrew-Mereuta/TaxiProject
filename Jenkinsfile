@@ -29,7 +29,8 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing..'
-                bat "mvn test"
+//                 bat "mvn test"
+                bat "mvn test jacoco:report"
             }
         }
         stage("Build JAR file"){
