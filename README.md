@@ -10,7 +10,7 @@ to all resources and can perform any action.
 Below you can see the er diagram of the project.  
 
 ## ER Diagram of my project
-<img src="C:\\Users\\Simple\\Desktop\\taxiProjectTry2\\ER-Taxi-Project.jpg"/>
+![ER-Diaqram](ER-Taxi-Project.png)
 
 ## Technologies I used
 
