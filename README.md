@@ -10,7 +10,8 @@ to all resources and can perform any action.
 Below you can see the er diagram of the project.  
 
 ## ER Diagram of my project
-<img src="ER-Taxi-Project.jpg"/>
+
+![ER-Taxi-Project.jpg](ER-Taxi-Project.jpg)
 
 ## Technologies I used
 
